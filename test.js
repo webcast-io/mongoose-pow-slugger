@@ -14,10 +14,9 @@
 /**
  * Module dependencies.
  */
-var mongoose = require('mongoose')
-  , slugger = require('../lib/slugger')
-  , assert = require('assert')
-  ;
+var mongoose = require('mongoose'),
+  slugger = require('./'),
+  assert = require('assert');
 
 /**
  * This counter is used to create unique models each time createPost is called, due to the way
@@ -30,11 +29,10 @@ var modelCounter = 1;
  * Options: schema, model, slugger
  */
 function createPost(options) {
-    var options = options || {}
-      , schema = options.schema || { title: String }
-      , sluggerOptions = options.slugger || {}
-      ;
-    
+    options = options || {};
+    schema = options.schema || { title: String };
+    sluggerOptions = options.slugger || {};
+
     //Set up schema
     var postSchema = new mongoose.Schema(schema);
     postSchema.plugin(slugger(sluggerOptions));
@@ -61,7 +59,7 @@ module.exports = {
         assert.isDefined(post.schema.paths.slug, 'slugKey defaults to "slug"');
         
         //Custom options
-        var post = createPost({
+        post = createPost({
             slugger: { slugKey: 'customSlugName' }
         });
         assert.isDefined(post.schema.paths.customSlugName, 'Allows setting custom slugKey');
@@ -74,12 +72,12 @@ module.exports = {
         assert.eql(post.slug, 'title', 'sourceKey defaults to "title"');
         
         //Custom option
-        var post = createPost({
+        post = createPost({
             schema: { name: String },
             slugger: { sourceKey: 'name'}
         });
         post.name = 'Name';
-        assert.eql(post.slug, 'name', 'Allows setting custom sourceKey')
+        assert.eql(post.slug, 'name', 'Allows setting custom sourceKey');
     },
     
     'can set an index via the index option': function() {
@@ -88,7 +86,7 @@ module.exports = {
         assert.eql(post.schema.paths.slug.options.index, true, 'Index is on by default');
         
         //Custom options
-        var post = createPost({
+        post = createPost({
             slugger: { index: false }
         });
         assert.isUndefined(post.schema.paths.slug.options.index, 'Index can be turned off');
@@ -105,7 +103,7 @@ module.exports = {
         );
         
         //Custom options
-        var post = createPost({
+        post = createPost({
             slugger: { length: 10 }
         });
         post.title = 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb';
@@ -122,7 +120,7 @@ module.exports = {
         assert.isUndefined(post.schema.paths.slug.options.unique, 'Unique index is off by default');
         
         //Custom options
-        var post = createPost({
+        post = createPost({
             slugger: { unique: true }
         });
         assert.eql(post.schema.paths.slug.options.unique, true, 'Unique index can be turned on');
@@ -135,7 +133,7 @@ module.exports = {
         assert.eql(post.slug, 'post-title', 'Default space character is "-"');
         
         //Custom options
-        var post = createPost({
+        post = createPost({
             slugger: { spaceChar: '_' }
         });
         post.title = 'Post Title';
@@ -149,7 +147,7 @@ module.exports = {
         assert.eql(post.slug, 'title', 'Default invalid character is empty string');
         
         //Custom options
-        var post = createPost({
+        post = createPost({
             slugger: { invalidChar: '-' }
         });
         post.title = 'Title!';

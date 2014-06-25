@@ -1,7 +1,7 @@
-mongoose-plugins
+mongoose-pow-slugger
 =================
 
-Plugins for the Mongoose ODM on NodeJS
+powmedia/mongoose-plugins slugger lib packaged and pushed to npm
 
 
 Usage
